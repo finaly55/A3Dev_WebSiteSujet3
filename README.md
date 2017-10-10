@@ -17,7 +17,7 @@ cd docker-website
 
 Installation des dépendances
 ````bash
-npm install hapi@13.0.0 --save
+npm install
 ````
 
 Compilation

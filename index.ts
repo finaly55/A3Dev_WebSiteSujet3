@@ -1,6 +1,26 @@
 import * as Hapi from 'hapi';
+import { ArgumentParser } from 'argparse'
+
+const parser = new ArgumentParser({
+    version: '0.0.1',
+    addHelp: true,
+    description: 'Add parameters...'
+});
+
+parser.addArgument(
+    [ '-n', '--name' ],
+    {
+        help: 'Site name',
+        defaultValue: 'IMIE docker cours'
+    }
+);
+
+const args = parser.parseArgs();
+
+console.log(args);
 
 const server = new Hapi.Server();
+
 server.connection({
     host: 'localhost',
     port: 8000
@@ -10,8 +30,7 @@ server.route({
     method: 'GET',
     path:'/hello/{name}',
     handler: function (request, reply) {
-
-        return reply('hello ' + request.params['name']);
+        return reply(`Hello ${request.params['name']}. Welcome to ${args.name}`);
     }
 });
 
@@ -20,7 +39,7 @@ server.route({
     path:'/',
     handler: function (request, reply) {
 
-        return reply('Nice');
+        return reply(`Welcome to ${args.name}`);
     }
 });
 
