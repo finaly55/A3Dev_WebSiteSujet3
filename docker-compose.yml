@@ -1,0 +1,33 @@
+version: '3'
+ networks:
+  proxy:
+    external: true
+  internal:
+    external: false
+ services:
+  reverse-proxy:
+    image: traefik # The official Traefik docker image
+    command: --api --docker # Enables the web UI and tells Træfik to listen to docker
+    ports:
+      - "8081:80"     # The HTTP port
+      - "8080:8080" # The Web UI (enabled by --api)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
+   bibi.com:
+    image: webapp2
+    labels:
+      - traefik.backend=bibi
+      - traefik.frontend.rule=Host:bibi.com
+      - traefik.docker.network=proxy
+      - traefik.port=8000
+    networks:
+      - internal
+   apptwiner.com:
+    image: webapp2
+    labels:
+      - traefik.backend=apptwiner
+      - traefik.frontend.rule=Host:apptwiner.com
+      - traefik.docker.network=proxy
+      - traefik.port=8000
+    networks:
+      - internal
